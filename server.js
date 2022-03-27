@@ -7,7 +7,7 @@ const port = process.env.PORT || 3001;
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
 //------------------------
 
 const publicPath = path.join(__dirname, "..", "build");
@@ -20,13 +20,14 @@ app.get("*", (req, res) => {
 
 //-------------------------
 // prod
-app.use(express.static(path.join(__dirname, "./client/build")));
+// app.use(express.static(path.join(__dirname, "..", "build")));
+// app.use(express.static(path.join(__dirname, "./client/build")));
 
 // dev
 app.use(require("body-parser").json());
 
 // prod
-app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
+// app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 
 // ******  add sudo database and two models *******
 // seed data
