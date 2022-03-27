@@ -27,6 +27,9 @@ app.use(express.static(path.join(__dirname, "./build")));
 app.use(require("body-parser").json());
 
 // prod
+app.get("/", (req, res) =>
+  res.sendFile(path.join(__dirname, "./build/index.html"))
+);
 // app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 
 // ******  add sudo database and two models *******
