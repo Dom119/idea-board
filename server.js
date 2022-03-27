@@ -1,5 +1,5 @@
-const express = require('express');
-const path = require('path');
+const express = require("express");
+const path = require("path");
 
 const port = process.env.PORT || 3001;
 
@@ -7,54 +7,64 @@ const port = process.env.PORT || 3001;
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
+//------------------------
 
+const publicPath = path.join(__dirname, "..", "build");
+
+app.use(express.static(publicPath));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(publicPath, "index.html"));
+});
+
+//-------------------------
 // prod
-app.use(express.static(path.join(__dirname, './client/build')));
+app.use(express.static(path.join(__dirname, "./client/build")));
 
 // dev
-app.use(require('body-parser').json());
+app.use(require("body-parser").json());
 
 // prod
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 
 // ******  add sudo database and two models *******
 // seed data
 const mars = {
   _id: 1,
-  title: 'Fly to Mars',
+  title: "Fly to Mars",
   description: "Earth isn't Red enough.  Let's move to a new planet",
-  date: new Date()
+  date: new Date(),
 };
 
 const tesla = {
   _id: 2,
-  title: 'Build a Car',
+  title: "Build a Car",
   description:
     "Gas is too expensive.  I'm gonna build a car that doesn't need gas",
-  date: new Date()
+  date: new Date(),
 };
 
 const elon = {
   _id: 1,
-  userName: 'elon_musk',
-  password: 'spaceiscool',
-  ideas: [mars, tesla]
+  userName: "elon_musk",
+  password: "spaceiscool",
+  ideas: [mars, tesla],
 };
 
 // ** default username and idea object **
 const User = {
   _id: null,
-  userName: 'New User',
-  password: 'New Password',
-  ideas: []
+  userName: "New User",
+  password: "New Password",
+  ideas: [],
 };
 
 const Idea = {
   _id: null,
-  title: 'New Title',
-  description: 'New Description',
-  created: ''
+  title: "New Title",
+  description: "New Description",
+  created: "",
 };
 
 //  database models, pre seeded with data
@@ -106,34 +116,34 @@ const addNewIdea = (id, newIdea) => {
 
 const dataWrapper = (response) => {
   const data = {
-    data: response
+    data: response,
   };
 
   return data;
 };
 
 // ** setup api here **
-app.get('/api/users', (req, res) => {
+app.get("/api/users", (req, res) => {
   res.json(dataWrapper(Users));
 });
 
-app.post('/api/users', (req, res) => {
+app.post("/api/users", (req, res) => {
   // add to users data model
   const users = createNewUser(req.body);
   res.json(dataWrapper(users));
 });
 
-app.get('/api/users/:id', (req, res) => {
+app.get("/api/users/:id", (req, res) => {
   const user = findUserById(req.params.id);
   res.json(dataWrapper(user));
 });
 
-app.post('/api/users/:id/ideas', (req, res) => {
+app.post("/api/users/:id/ideas", (req, res) => {
   const newIdeaAdded = addNewIdea(req.params.id, req.body);
   res.json(dataWrapper(newIdeaAdded));
 });
 
-app.delete('/api/users/:id/ideas/:ideaId', (req, res) => {
+app.delete("/api/users/:id/ideas/:ideaId", (req, res) => {
   const user = findUserById(req.params.id);
   const updatedIdeas = user.ideas.filter(
     (ele) => ele._id !== parseInt(req.params.ideaId, 10)
@@ -143,7 +153,7 @@ app.delete('/api/users/:id/ideas/:ideaId', (req, res) => {
   res.json(dataWrapper(user));
 });
 
-app.patch('/api/users/:id/ideas/:ideaId', (req, res) => {
+app.patch("/api/users/:id/ideas/:ideaId", (req, res) => {
   const user = findUserById(req.params.id);
   const updatedIdea = req.body;
   // find idea using id and update the user idea array
