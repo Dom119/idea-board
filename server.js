@@ -6,31 +6,17 @@ const port = process.env.PORT || 3001;
 // instantiate express and add handlers
 const app = express();
 app.use(express.json());
-//------------------------
-
-// const publicPath = path.join(__dirname, "..", "build");
-
-// app.use(express.static(publicPath));
-
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(publicPath, "index.html"));
-// });
-
-// -------------------------
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+
 // prod
-app.use(express.static(path.join(__dirname, "./build")));
-// app.use(express.static(path.join(__dirname, "./client/build")));
+app.use(express.static(path.join(__dirname, "./client/build")));
 
 // dev
 app.use(require("body-parser").json());
 
 // prod
-app.get("/", (req, res) =>
-  res.sendFile(path.join(__dirname, "./build/index.html"))
-);
-// app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 
 // ******  add sudo database and two models *******
 // seed data
@@ -51,7 +37,7 @@ const tesla = {
 
 const elon = {
   _id: 1,
-  userName: "elon_musk",
+  userName: "Elon Musk",
   password: "spaceiscool",
   ideas: [mars, tesla],
 };
@@ -184,5 +170,4 @@ app.patch("/api/users/:id/ideas/:ideaId", (req, res) => {
 
 // start server
 app.listen(port, () => console.log(`Listening on port ${port}`));
-
-// module.exports = app;
+module.exports = app;
